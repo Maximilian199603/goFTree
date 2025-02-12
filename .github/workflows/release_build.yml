@@ -37,9 +37,9 @@ jobs:
           echo "Building $REPO_NAME with version: $VERSION for $OS/$ARCH"
           GOOS=$OS GOARCH=$ARCH go build -o $REPO_NAME-$VERSION-$OS-$ARCH -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=${VERSION}"
 
-      # Upload the build artifacts using the updated v3 version
+      # Upload the build artifacts using the updated v4 version
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}-${{ github.event.inputs.version }}
           path: ${{ matrix.os }}-${{ matrix.arch }}-${{ github.event.inputs.version }}
