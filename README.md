@@ -53,7 +53,8 @@ Set-Alias -Name goftree -Value "C:\Program Files\goftree\goftree.exe"
 3\. Save and close Notepad.
 4\. Restart PowerShell or run `. $PROFILE` to apply changes.
 ### Linux and MacOS
-1\. Download the appropriate `goftree` binary for your OS and architecture from the [releases page](https://github.com/EdgeLordKirito/goFTree/releases)2\. Move it to `/usr/local/bin` and give it execute permissions:
+1\. Download the appropriate `goftree` binary for your OS and architecture from the [releases page](https://github.com/EdgeLordKirito/goFTree/releases)
+2\. Move it to `/usr/local/bin` and give it execute permissions:
 
 ```sh
 sudo mv goftree /usr/local/bin/
