@@ -1,50 +1,28 @@
-name: Release
-
-on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version'
-        required: true
-        default: '1.0.0'
-
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [linux, windows, darwin]
-        arch: [amd64, arm64]
+        os: [linux, windows, darwin]  # Specify the OS platforms for which to build
+        arch: [amd64, arm64]  # Specify the architectures (AMD64, ARM64)
 
     steps:
-      # Check out the code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      # Set up Go
+      # Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: '1.23.1'
 
-      # Build the Go binary for each OS/Arch
-      - name: Build
+      # Build the binary for each OS/Arch
+      - name: Build Binary
         run: |
           VERSION=${{ github.event.inputs.version }}
           OS=${{ matrix.os }}
           ARCH=${{ matrix.arch }}
           REPO_NAME=$(basename $GITHUB_REPOSITORY)  # Get repo name dynamically
-          BUILD_PATH="${REPO_NAME}-${VERSION}-${OS}-${ARCH}"
-
           echo "Building $REPO_NAME with version: $VERSION for $OS/$ARCH"
-          GOOS=$OS GOARCH=$ARCH go build -o $BUILD_PATH -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=${VERSION}"
-
-          # Ensure the binary is created
-          ls -al $BUILD_PATH
-
-      # Upload the build artifact
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}-${{ matrix.arch }}-${{ github.event.inputs.version }}
-          path: ${{ steps.build.outputs.path }}  # Adjust to point to the actual build path
+          GOOS=$OS GOARCH=$ARCH go build -o ${REPO_NAME}-${VERSION}-${OS}-${ARCH} -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=${VERSION}"
