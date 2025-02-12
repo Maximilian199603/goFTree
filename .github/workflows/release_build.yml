@@ -1,0 +1,56 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux, darwin, windows]
+        arch: [amd64, arm64]
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.23.1' # Set Go version here
+
+      # Cache Go modules to speed up build
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Build the Go binary for different platforms and architectures
+      - name: Build Go Binary
+        run: |
+          VERSION=${{ github.event.inputs.version }}
+          OS=${{ matrix.os }}
+          ARCH=${{ matrix.arch }}
+          REPO_NAME=$(basename $GITHUB_REPOSITORY)  # Get repo name dynamically
+          echo "Building $REPO_NAME with version: $VERSION for $OS/$ARCH"
+          GOOS=$OS GOARCH=$ARCH go build -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=$VERSION" -o $REPO_NAME-$VERSION-$OS-$ARCH
+
+      # Upload the generated binary as an artifact
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}-binary
+          path: $REPO_NAME-${{ github.event.inputs.version }}-${{ matrix.os }}-${{ matrix.arch }}
