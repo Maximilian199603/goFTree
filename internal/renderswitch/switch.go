@@ -9,6 +9,7 @@ import (
 	"github.com/EdgeLordKirito/goFTree/package/renderers/jsontree"
 	"github.com/EdgeLordKirito/goFTree/package/renderers/linetree"
 	"github.com/EdgeLordKirito/goFTree/package/renderers/markdowntree"
+	"github.com/EdgeLordKirito/goFTree/package/renderers/nerdtree"
 	"github.com/EdgeLordKirito/goFTree/package/renderers/xmltree"
 )
 
@@ -26,6 +27,8 @@ func GetRenderEngine(identifier string) (renderer.Renderer, error) {
 		return linetree.Engine{}, nil
 	case "dashed":
 		return dashedtree.Engine{}, nil
+	case "nerd":
+		return &nerdtree.Engine{}, nil
 	default:
 		return nil, fmt.Errorf("Unrecognised Identifier: '%s'", identifier)
 	}
