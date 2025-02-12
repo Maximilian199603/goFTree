@@ -34,12 +34,17 @@ jobs:
           OS=${{ matrix.os }}
           ARCH=${{ matrix.arch }}
           REPO_NAME=$(basename $GITHUB_REPOSITORY)  # Get repo name dynamically
-          echo "Building $REPO_NAME with version: $VERSION for $OS/$ARCH"
-          GOOS=$OS GOARCH=$ARCH go build -o $REPO_NAME-$VERSION-$OS-$ARCH -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=${VERSION}"
+          BUILD_PATH="${REPO_NAME}-${VERSION}-${OS}-${ARCH}"
 
-      # Upload the build artifacts using the updated v4 version
+          echo "Building $REPO_NAME with version: $VERSION for $OS/$ARCH"
+          GOOS=$OS GOARCH=$ARCH go build -o $BUILD_PATH -ldflags "-X github.com/EdgeLordKirito/goFTree/internal/goFTree/version.Version=${VERSION}"
+
+          # Ensure the binary is created
+          ls -al $BUILD_PATH
+
+      # Upload the build artifact
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-${{ matrix.arch }}-${{ github.event.inputs.version }}
-          path: ${{ matrix.os }}-${{ matrix.arch }}-${{ github.event.inputs.version }}
+          path: ${{ steps.build.outputs.path }}  # Adjust to point to the actual build path
