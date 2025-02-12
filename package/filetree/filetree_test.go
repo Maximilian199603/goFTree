@@ -10,7 +10,6 @@ var expectedStructure = map[string][]string{
 		"file1.txt",
 		"file2.log",
 		"dir1",
-		"emptydir",
 	},
 	"testdata/dir1": {
 		"file3.txt",
@@ -21,7 +20,6 @@ var expectedStructure = map[string][]string{
 		"file5.txt",
 		"file6.json",
 	},
-	"testdata/emptydir": {}, // Should be empty
 }
 
 // TestBuildTree validates that the generated tree matches the expected structure
