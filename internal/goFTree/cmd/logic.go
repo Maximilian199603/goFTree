@@ -6,12 +6,18 @@ import (
 	"os"
 	"strings"
 
+	"github.com/EdgeLordKirito/goFTree/internal/goFTree/version"
 	"github.com/EdgeLordKirito/goFTree/internal/renderswitch"
 	"github.com/EdgeLordKirito/goFTree/package/filetree"
 	"github.com/spf13/cobra"
 )
 
 func runTreeCommand(cmd *cobra.Command, args []string) error {
+	if printVersion {
+		fmt.Println(version.Version)
+		return nil
+	}
+
 	path := args[0]
 
 	toStdout := true
