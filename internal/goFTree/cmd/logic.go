@@ -18,6 +18,11 @@ func runTreeCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	if len(args) == 0 {
+		cmd.Help()
+		return nil
+	}
+
 	path := args[0]
 
 	toStdout := true

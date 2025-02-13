@@ -44,9 +44,6 @@ func buildRoot() *cobra.Command {
 
 func validateArgs(cmd *cobra.Command, args []string) error {
 	_ = cmd
-	if len(args) == 0 && !printVersion {
-		return fmt.Errorf("either provide an argument or use --version (-v)")
-	}
 
 	if len(args) == 1 && printVersion {
 		return fmt.Errorf("cannot provide an argument and use --version (-v)")
