@@ -130,15 +130,17 @@ type Engine struct{}
 func (e Engine) Render(tree *filetree.FileTree) (string, error) {
 
 	set := &generaltree.RenderSettings{
-		TJunction:  "├── ",
-		LJunction:  "└── ",
-		NoJunction: "│   ",
-		Empty:      "    ",
+		DirTJunction:  "├── ",
+		DirLJunction:  "└── ",
+		FileTJunction: "├── ",
+		FileLJunction: "└── ",
+		NoJunction:    "│   ",
+		Empty:         "    ",
 
 		DirPrepender:  func(s string, n *filetree.Node) (string, *filetree.Node) { return getIcon(n) + s, n },
 		DirAppender:   func(s string, n *filetree.Node) (string, *filetree.Node) { return s + "/", n },
 		FilePrepender: func(s string, n *filetree.Node) (string, *filetree.Node) { return getIcon(n) + s, n },
-		FileAppender:  func(s string, n *filetree.Node) (string, *filetree.Node) { return s, n },
+		FileAppender:  generaltree.Noop,
 	}
 	return generaltree.Render(tree, set)
 }

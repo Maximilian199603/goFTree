@@ -1,58 +1,26 @@
 package linetree
 
-import "github.com/EdgeLordKirito/goFTree/package/filetree"
+import (
+	"github.com/EdgeLordKirito/goFTree/package/filetree"
+	"github.com/EdgeLordKirito/goFTree/package/renderers/generaltree"
+)
 
 type Engine struct{}
 
 func (e Engine) Render(tree *filetree.FileTree) (string, error) {
-	if tree.Root == nil {
-		return "", filetree.ErrEmptyTree()
+
+	set := &generaltree.RenderSettings{
+		DirTJunction:  "├── ",
+		DirLJunction:  "└── ",
+		FileTJunction: "├── ",
+		FileLJunction: "└── ",
+		NoJunction:    "│   ",
+		Empty:         "    ",
+
+		DirPrepender:  generaltree.Noop,
+		DirAppender:   func(s string, n *filetree.Node) (string, *filetree.Node) { return s + "/", n },
+		FilePrepender: generaltree.Noop,
+		FileAppender:  generaltree.Noop,
 	}
-
-	displayName := tree.Root.Name
-	if tree.Root.IsDir {
-		displayName += "/"
-	}
-
-	result := displayName + "\n"
-
-	for i, child := range tree.Root.Children {
-		isLastChild := i == len(tree.Root.Children)-1
-		result += render(child, "", isLastChild)
-	}
-
-	return result, nil
-}
-
-func render(node *filetree.Node, prefix string, isLast bool) string {
-	if node == nil {
-		return ""
-	}
-
-	connector := "├── "
-	if isLast {
-		connector = "└── "
-	}
-
-	displayName := node.Name
-	if node.IsDir {
-		displayName += "/"
-	}
-
-	result := prefix + connector + displayName + "\n"
-
-	newPrefix := prefix
-	if isLast {
-		newPrefix += "    "
-	} else {
-		newPrefix += "│   "
-	}
-
-	// Iterate through children
-	for i, child := range node.Children {
-		isLastChild := i == len(node.Children)-1
-		result += render(child, newPrefix, isLastChild)
-	}
-
-	return result
+	return generaltree.Render(tree, set)
 }
