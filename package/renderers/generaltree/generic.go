@@ -28,10 +28,12 @@ func produceNoop() func(string, *filetree.Node) (string, *filetree.Node) {
 }
 
 type RenderSettings struct {
-	TJunction  string //"├── "
-	LJunction  string //"└── "
-	NoJunction string //"│   "
-	Empty      string
+	DirTJunction  string //"├── "
+	DirLJunction  string //"└── "
+	FileTJunction string
+	FileLJunction string
+	NoJunction    string //"│   "
+	Empty         string
 
 	DirPrepender  func(string, *filetree.Node) (string, *filetree.Node)
 	DirAppender   func(string, *filetree.Node) (string, *filetree.Node)
@@ -97,9 +99,17 @@ func render(sb *strings.Builder, node *filetree.Node,
 		return
 	}
 
-	connector := settings.TJunction
-	if isLast {
-		connector = settings.LJunction
+	connector := ""
+	if node.IsDir {
+		connector = settings.DirTJunction
+		if isLast {
+			connector = settings.DirLJunction
+		}
+	} else {
+		connector = settings.FileTJunction
+		if isLast {
+			connector = settings.FileLJunction
+		}
 	}
 
 	buildLine(sb, prefix, connector, node, settings)
