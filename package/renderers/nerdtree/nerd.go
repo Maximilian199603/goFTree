@@ -1,10 +1,10 @@
 package nerdtree
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/EdgeLordKirito/goFTree/package/filetree"
+	"github.com/EdgeLordKirito/goFTree/package/renderers/generaltree"
 )
 
 // fileIcons maps file extensions to their respective Nerd Font icons.
@@ -128,45 +128,23 @@ type Engine struct{}
 
 // Render generates the Nerd Font file tree as a string.
 func (e Engine) Render(tree *filetree.FileTree) (string, error) {
-	if tree.Root == nil {
-		return "", fmt.Errorf("cannot render an empty file tree")
+
+	set := &generaltree.RenderSettings{
+		TJunction:  "├── ",
+		LJunction:  "└── ",
+		NoJunction: "│   ",
+		Empty:      "    ",
+
+		DirPrepender:  func(s string, n *filetree.Node) (string, *filetree.Node) { return getIcon(n) + s, n },
+		DirAppender:   func(s string, n *filetree.Node) (string, *filetree.Node) { return s + "/", n },
+		FilePrepender: func(s string, n *filetree.Node) (string, *filetree.Node) { return getIcon(n) + s, n },
+		FileAppender:  func(s string, n *filetree.Node) (string, *filetree.Node) { return s, n },
 	}
-
-	var builder strings.Builder
-	e.render(&builder, tree.Root, "", true)
-	return builder.String(), nil
-}
-
-// render recursively renders nodes with Nerd Font icons.
-func (r *Engine) render(builder *strings.Builder, node *filetree.FileNode, prefix string, isLast bool) {
-	// Determine connector symbols
-	connector := "├── "
-	if isLast {
-		connector = "└── "
-	}
-
-	// Add correct indentation
-	builder.WriteString(prefix)
-	builder.WriteString(connector)
-
-	// Determine correct icon
-	icon := getIcon(node)
-	builder.WriteString(icon + node.Name + "\n")
-
-	// Prepare prefix for children
-	newPrefix := prefix + "│   "
-	if isLast {
-		newPrefix = prefix + "    "
-	}
-
-	// Render children recursively
-	for i, child := range node.Children {
-		r.render(builder, child, newPrefix, i == len(node.Children)-1)
-	}
+	return generaltree.Render(tree, set)
 }
 
 // getIcon returns the appropriate Nerd Font icon for the given node.
-func getIcon(node *filetree.FileNode) string {
+func getIcon(node *filetree.Node) string {
 	if node.IsDir {
 		return directoryIcon
 	}
