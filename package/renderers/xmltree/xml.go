@@ -29,7 +29,7 @@ func (e Engine) Render(tree *filetree.FileTree) (string, error) {
 	return xml.Header + string(output), nil
 }
 
-func convertToXMLNode(node *filetree.FileNode) xmlNode {
+func convertToXMLNode(node *filetree.Node) xmlNode {
 	if node == nil {
 		return xmlNode{}
 	}

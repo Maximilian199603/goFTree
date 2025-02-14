@@ -23,7 +23,7 @@ func (e Engine) Render(tree *filetree.FileTree) (string, error) {
 	return sb.String(), nil
 }
 
-func render(sb *strings.Builder, node *filetree.FileNode, prefix string, isLast bool) {
+func render(sb *strings.Builder, node *filetree.Node, prefix string, isLast bool) {
 	if node == nil {
 		return
 	}

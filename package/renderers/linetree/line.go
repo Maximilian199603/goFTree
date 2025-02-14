@@ -24,7 +24,7 @@ func (e Engine) Render(tree *filetree.FileTree) (string, error) {
 	return result, nil
 }
 
-func render(node *filetree.FileNode, prefix string, isLast bool) string {
+func render(node *filetree.Node, prefix string, isLast bool) string {
 	if node == nil {
 		return ""
 	}

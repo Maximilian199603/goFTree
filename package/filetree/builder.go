@@ -13,14 +13,14 @@ var (
 )
 
 type FileTree struct {
-	Root *FileNode
+	Root *Node
 }
 
 // IMPORTANT: Read Only after creation
-type FileNode struct {
-	Name     string      // File or directory name
-	IsDir    bool        // Indicates if it's a directory
-	Children []*FileNode // Nested files and directories
+type Node struct {
+	Name     string  // File or directory name
+	IsDir    bool    // Indicates if it's a directory
+	Children []*Node // Nested files and directories
 }
 
 func BuildTree(rootPath string) (*FileTree, error) {
@@ -29,7 +29,7 @@ func BuildTree(rootPath string) (*FileTree, error) {
 		return nil, fmt.Errorf("Error accessing path %q: %v", rootPath, err)
 	}
 
-	root := &FileNode{Name: rootInfo.Name(), IsDir: rootInfo.IsDir()}
+	root := &Node{Name: rootInfo.Name(), IsDir: rootInfo.IsDir()}
 	if root.IsDir {
 		buildTreeHelper(root, rootPath)
 	}
@@ -37,7 +37,7 @@ func BuildTree(rootPath string) (*FileTree, error) {
 	return &FileTree{Root: root}, nil
 }
 
-func buildTreeHelper(parent *FileNode, path string) {
+func buildTreeHelper(parent *Node, path string) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		fmt.Printf("Error reading directory %q: %v\n", path, err)
@@ -46,7 +46,7 @@ func buildTreeHelper(parent *FileNode, path string) {
 
 	for _, entry := range entries {
 		childPath := filepath.Join(path, entry.Name())
-		node := &FileNode{Name: entry.Name(), IsDir: entry.IsDir()}
+		node := &Node{Name: entry.Name(), IsDir: entry.IsDir()}
 
 		if entry.IsDir() {
 			buildTreeHelper(node, childPath)

@@ -44,7 +44,7 @@ func TestBuildTree(t *testing.T) {
 }
 
 // validateTree recursively checks if the file tree matches the expected structure
-func validateTree(t *testing.T, node *FileNode, path string) {
+func validateTree(t *testing.T, node *Node, path string) {
 	expectedFiles, exists := expectedStructure[path]
 	if !exists {
 		t.Fatalf("Unexpected path in tree: %s", path)
