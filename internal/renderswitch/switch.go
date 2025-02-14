@@ -28,7 +28,7 @@ func GetRenderEngine(identifier string) (renderer.Renderer, error) {
 	case "dashed":
 		return dashedtree.Engine{}, nil
 	case "nerd":
-		return &nerdtree.Engine{}, nil
+		return nerdtree.Engine{}, nil
 	default:
 		return nil, fmt.Errorf("Unrecognised Identifier: '%s'", identifier)
 	}
