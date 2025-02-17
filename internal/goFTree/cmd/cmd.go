@@ -11,6 +11,7 @@ var (
 	style        string
 	outputFile   string
 	printVersion bool
+	includes     string
 )
 
 // Execute runs the CLI tool
@@ -38,6 +39,9 @@ func buildRoot() *cobra.Command {
 
 	rootCmd.PersistentFlags().BoolVarP(&printVersion, "version", "v", false,
 		"Print Current Version")
+
+	rootCmd.PersistentFlags().StringVarP(&includes, "hidden", "", "none",
+		"Include hidden files and or directories: all, files, dirs, none")
 
 	return rootCmd
 }

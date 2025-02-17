@@ -25,8 +25,13 @@ var expectedStructure = map[string][]string{
 // TestBuildTree validates that the generated tree matches the expected structure
 func TestBuildTree(t *testing.T) {
 	testPath := "testdata"
+	hOpt := HiddenOptions{
+		All:   true,
+		Files: true,
+		Dirs:  true,
+	}
 
-	tree, err := BuildTree(testPath)
+	tree, err := BuildTree(testPath, &hOpt)
 	if err != nil {
 		t.Fatalf("BuildTree failed: %v", err)
 	}

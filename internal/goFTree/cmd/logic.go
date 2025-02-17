@@ -18,12 +18,18 @@ func runTreeCommand(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	path := ""
 	if len(args) == 0 {
-		cmd.Help()
-		return nil
+		p, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		path = p
+	} else {
+		path = args[0]
 	}
 
-	path := args[0]
+	hOptions := parseHiddenOptions()
 
 	toStdout := true
 
@@ -53,7 +59,7 @@ func runTreeCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	tree, err := filetree.BuildTree(path)
+	tree, err := filetree.BuildTree(path, hOptions)
 	if err != nil {
 		return err
 	}
@@ -72,4 +78,18 @@ func runTreeCommand(cmd *cobra.Command, args []string) error {
 		fmt.Printf("Output written to %s\n", outputFile)
 	}
 	return nil
+}
+
+func parseHiddenOptions() *filetree.HiddenOptions {
+	dec := strings.ToLower(includes)
+	switch dec {
+	case "all":
+		return filetree.NewHiddenOption(true, true, true)
+	case "dirs":
+		return filetree.NewHiddenOption(false, true, false)
+	case "files":
+		return filetree.NewHiddenOption(false, false, true)
+	default:
+		return filetree.NewHiddenOption(false, false, false)
+	}
 }
