@@ -28,6 +28,11 @@ goFTree [path] [flags]
     - `nerd`: Uses Nerd Font icons to enhance the tree visualization with symbols.
   
 - `--file`, `-f`: The file to which the output will be written. If the file exists, you will be asked for confirmation before overwriting it.
+- `--include-hidden`, `-i`: Wether to include hidden files and or directories. Options are:
+	- all: include all hidden entries
+	- files: only includes hidden files
+	- dirs: only includes hidden directories
+	- none: do not include hidden entries
 - `--version`, `-v`: Prints the installed version
 
 ## Installation
