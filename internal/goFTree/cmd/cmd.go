@@ -40,8 +40,8 @@ func buildRoot() *cobra.Command {
 	rootCmd.PersistentFlags().BoolVarP(&printVersion, "version", "v", false,
 		"Print Current Version")
 
-	rootCmd.PersistentFlags().StringVarP(&includes, "hidden", "", "none",
-		"Include hidden files and or directories: all, files, dirs, none")
+	rootCmd.PersistentFlags().StringVarP(&includes, "include-hidden", "i", "none",
+		"Wether to include hidden files and or directories: all, files, dirs, none")
 
 	return rootCmd
 }
