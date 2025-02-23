@@ -27,3 +27,6 @@ go.work.sum
 # Exclude goFTree zip files
 goFTree_32bit.zip
 goFTree_64bit.zip
+
+# Exclude .nupkg files
+*.nupkg
