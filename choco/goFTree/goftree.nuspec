@@ -6,9 +6,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>goftree</id>
-    <version>0.1.0</version>
-    <!-- <packageSourceUrl>Where is this Chocolatey package located (think GitHub)? packageSourceUrl is highly recommended for the community feed</packageSourceUrl>-->
-    <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
+    <version>0.1.1</version>
+    <packageSourceUrl>https://github.com/EdgeLordKirito/goFTree</packageSourceUrl>
     <owners>EdgeLordKirito</owners>
     <!-- ============================== -->
 
@@ -23,15 +22,21 @@
     <!--<iconUrl>http://rawcdn.githack.com/__REPLACE_YOUR_REPO__/master/icons/goftree.png</iconUrl>-->
     <!-- <copyright>Year Software Vendor</copyright> -->
     <!-- If there is a license Url available, it is required for the community feed -->
-    <!-- <licenseUrl>https://opensource.org/license/MIT</licenseUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>-->
+    <licenseUrl>https://github.com/EdgeLordKirito/goFTree/blob/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <projectSourceUrl>https://github.com/EdgeLordKirito/goFTree</projectSourceUrl>
     <!--<docsUrl>At what url are the software docs located?</docsUrl>-->
     <!--<mailingListUrl></mailingListUrl>-->
-    <!--<bugTrackerUrl></bugTrackerUrl>-->
+    <bugTrackerUrl>
+		https://github.com/EdgeLordKirito/goFTree/issues
+	</bugTrackerUrl>
     <tags>goftree filetree tree file go golang</tags>
     <summary>goFTree is a stylised filetree renderer written in go</summary>
-    <description></description>
+    <description>
+		goFTree is a powerful and flexible file tree renderer that supports multiple rendering modes, allowing users to visualize directory structures in various formats.
+		For more details and usage instructions, visit the project repository:  
+		https://github.com/EdgeLordKirito/goFTree
+	</description>
     <!-- =============================== -->
   </metadata>
   <files>

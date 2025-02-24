@@ -18,43 +18,63 @@ $currentDir = Get-Location  # Get the current directory (absolute path)
 $chocoDir = "$currentDir\choco\goFTree"
 $toolsDir = "$chocoDir\tools"
 $outDir = "$currentDir\choco\out"  # Absolute output directory for the .nupkg file
+$tempDir = "$currentDir\choco\temp"  # Temporary directory for handling executables
 
-# Create the tools directory if it doesn't exist
-if (-not (Test-Path -Path $toolsDir)) {
-    Write-Host "Creating tools directory at $toolsDir"
-    New-Item -ItemType Directory -Force -Path $toolsDir
+# Create the necessary directories
+$directories = @($toolsDir, $outDir, $tempDir)
+foreach ($dir in $directories) {
+    if (-not (Test-Path -Path $dir)) {
+        Write-Host "Creating directory: $dir"
+        New-Item -ItemType Directory -Force -Path $dir
+    }
 }
 
-# Create the out directory if it doesn't exist
-if (-not (Test-Path -Path $outDir)) {
-    Write-Host "Creating output directory at $outDir"
-    New-Item -ItemType Directory -Force -Path $outDir
-}
+# Create 32bit and 64bit directories inside the temp directory
+$exe32TempDir = "$tempDir\32bit"
+$exe64TempDir = "$tempDir\64bit"
+New-Item -ItemType Directory -Force -Path $exe32TempDir
+New-Item -ItemType Directory -Force -Path $exe64TempDir
 
-# Create zip files for both the 32-bit and 64-bit executables
-$exe32Zip = "$toolsDir\goFTree_32bit.zip"
-$exe64Zip = "$toolsDir\goFTree_64bit.zip"
-
-# Function to create zip files
-function CreateZip {
+# Function to copy and rename the executable
+function CopyAndRenameExe {
     param (
         [string]$exePath,
-        [string]$zipPath
+        [string]$destinationDir
     )
-
-    Write-Host "Creating zip file for $exePath"
+    
     if (Test-Path $exePath) {
-        Compress-Archive -Path $exePath -DestinationPath $zipPath -Force
-        Write-Host "Created zip file: $zipPath"
+        $destinationExePath = "$destinationDir\goftree.exe"
+        Write-Host "Copying $exePath to $destinationExePath"
+        Copy-Item -Path $exePath -Destination $destinationExePath -Force
     } else {
         Write-Host "Error: File $exePath does not exist!"
         exit 1
     }
 }
 
-# Create the zip files for both the 32-bit and 64-bit executables
-CreateZip $exe32Path $exe32Zip
-CreateZip $exe64Path $exe64Zip
+# Copy and rename both the 32bit and 64bit executables
+CopyAndRenameExe $exe32Path $exe32TempDir
+CopyAndRenameExe $exe64Path $exe64TempDir
+
+# Create zip files for the 32-bit and 64-bit executables
+$exe32Zip = "$toolsDir\goFTree_32bit.zip"
+$exe64Zip = "$toolsDir\goFTree_64bit.zip"
+
+# Function to create zip files
+function CreateZip {
+    param (
+        [string]$sourceExePath,
+        [string]$zipPath
+    )
+
+    Write-Host "Creating zip file for $sourceExePath"
+    Compress-Archive -Path $sourceExePath -DestinationPath $zipPath -Force
+    Write-Host "Created zip file: $zipPath"
+}
+
+# Create the zip files for the executables only (not the entire directories)
+CreateZip "$exe32TempDir\goftree.exe" $exe32Zip
+CreateZip "$exe64TempDir\goftree.exe" $exe64Zip
 
 # Modify the version in the goftree.nuspec file
 $nuspecPath = "$chocoDir\goftree.nuspec"
@@ -73,6 +93,11 @@ Set-Location -Path $chocoDir
 Write-Host "Running choco pack..."
 $chocoPackOutput = choco pack --output-directory $outDir
 $chocoPackOutput | ForEach-Object { Write-Host $_ }
+
+# Cleanup: Remove the temp directory and its contents
+Write-Host "Cleaning up temporary files in $tempDir"
+Remove-Item -Path $tempDir -Recurse -Force
+Write-Host "Temporary files cleaned up."
 
 # Return to the original directory before exiting
 Set-Location -Path $originalDirectory
